@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ABSEN SAYANG💖</title>
+<title>Absen Pacar 💖</title>
 
 <style>
 body {
@@ -43,9 +43,6 @@ button {
     color: white;
     font-size: 16px;
 }
-button:hover {
-    background: #ff1a66;
-}
 #lokasi {
     text-align: center;
     color: #ff4d88;
@@ -56,50 +53,50 @@ button:hover {
 <body>
 
 <div class="container">
-<h2>ABSEN SAYANG💖</h2>
+<h2>Absen Pacar 💖</h2>
 
 <div class="box">
-NAMA:
+Nama:
 <input type="text" id="nama">
 </div>
 
 <div class="box">
-ABSEN:
+Absen:
 <select id="absen">
-<option>PAGI</option>
-<option>SIANG</option>
-<option>MALEM</option>
+<option>Pagi</option>
+<option>Siang</option>
+<option>Malam</option>
 </select>
 </div>
 
 <div class="box">
-MAKAN:
+Makan:
 <select id="makan">
-<option>NASI</option>
-<option>MIE</option>
-<option>AYAM</option>
-<option>ROTI</option>
-<option>TIDAK MAKAN</option>
+<option>Nasi</option>
+<option>Mie</option>
+<option>Ayam</option>
+<option>Roti</option>
+<option>Tidak makan</option>
 </select>
 </div>
 
 <div class="box">
-MANDI:
-<select id="MANDI">
-<option>SUDAH</option>
-<option>BELOM</option>
+Mandi:
+<select id="mandi">
+<option>Sudah</option>
+<option>Belum</option>
 </select>
 </div>
 
 <div class="box">
-ALASAN KELUAR:
+Alasan keluar:
 <input type="text" id="alasan">
 </div>
 
-<button onclick="getLocation()">📍 AMBIL GPS</button>
-<p id="lokasi">BELOM AMBIL GPS</p>
+<button onclick="getLocation()">📍 Ambil GPS</button>
+<p id="lokasi">Belum ambil lokasi</p>
 
-<button onclick="kirimWA()">💌 KIRIM</button>
+<button onclick="kirimWA()">💌 Kirim ke WhatsApp</button>
 
 </div>
 
@@ -108,12 +105,16 @@ let latitude = "";
 let longitude = "";
 
 function getLocation() {
-    navigator.geolocation.getCurrentPosition(function(pos) {
-        latitude = pos.coords.latitude;
-        longitude = pos.coords.longitude;
-        document.getElementById("lokasi").innerHTML =
-            "Lokasi: " + latitude + "," + longitude;
-    });
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(function(pos) {
+            latitude = pos.coords.latitude;
+            longitude = pos.coords.longitude;
+            document.getElementById("lokasi").innerHTML =
+                "Lokasi: " + latitude + "," + longitude;
+        });
+    } else {
+        alert("GPS tidak didukung");
+    }
 }
 
 function kirimWA() {
@@ -124,16 +125,19 @@ function kirimWA() {
     let alasan = document.getElementById("alasan").value;
 
     let text =
-    "ABSEN PACAR 💖%0A" +
-    "Nama: " + nama + "%0A" +
-    "Absen: " + absen + "%0A" +
-    "Makan: " + makan + "%0A" +
-    "Mandi: " + mandi + "%0A" +
-    "Alasan: " + alasan + "%0A" +
+    "ABSEN PACAR 💖\n" +
+    "Nama: " + nama + "\n" +
+    "Absen: " + absen + "\n" +
+    "Makan: " + makan + "\n" +
+    "Mandi: " + mandi + "\n" +
+    "Alasan: " + alasan + "\n" +
     "GPS: https://maps.google.com/?q=" + latitude + "," + longitude;
 
-    let nomor = "6283136242383"; // ganti nomor
-    window.open("https://wa.me/" + nomor + "?text=" + text, "_blank");
+    let nomor = "6283136242383";
+
+    let url = "https://wa.me/" + nomor + "?text=" + encodeURIComponent(text);
+
+    window.open(url, "_blank");
 }
 </script>
 
