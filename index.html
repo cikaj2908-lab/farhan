@@ -3,41 +3,51 @@
 <head>
     <meta charset="UTF-8">
     <title>Absen GPS</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <style>
         body {
             font-family: Arial;
-            background: #f4f4f4;
             text-align: center;
-            padding-top: 40px;
+            background: #f4f4f4;
+            padding-top: 50px;
         }
+
         .box {
             background: white;
             padding: 20px;
             border-radius: 10px;
-            width: 320px;
+            width: 300px;
             margin: auto;
             box-shadow: 0 0 10px rgba(0,0,0,0.1);
         }
+
         input, select {
-            width: 95%;
-            padding: 8px;
-            margin: 5px 0;
+            width: 90%;
+            padding: 10px;
+            margin: 5px;
         }
+
         button {
+            width: 95%;
+            padding: 12px;
             background: green;
             color: white;
             border: none;
-            padding: 10px;
-            width: 100%;
             border-radius: 5px;
-            cursor: pointer;
         }
-        .status {
+
+        button:active {
+            background: darkgreen;
+        }
+
+        #status {
             font-size: 12px;
             color: gray;
         }
     </style>
 </head>
+
 <body>
 
 <div class="box">
@@ -47,58 +57,59 @@
     <input type="text" id="kelas" placeholder="Kelas"><br>
 
     <select id="waktuAbsen">
-        <option value="">Pilih Waktu Absen</option>
+        <option value="">Pilih Waktu</option>
         <option value="Pagi">Pagi</option>
         <option value="Siang">Siang</option>
         <option value="Malam">Malam</option>
     </select><br>
 
-    <p class="status" id="status">📍 Mengambil lokasi...</p>
+    <p id="status">Klik tombol untuk absen</p>
 
     <button onclick="kirimWA()">Absen Sekarang</button>
 </div>
 
 <script>
 function kirimWA() {
+
     var nama = document.getElementById("nama").value;
     var kelas = document.getElementById("kelas").value;
     var waktuAbsen = document.getElementById("waktuAbsen").value;
 
-    if(nama === "" || kelas === "" || waktuAbsen === "") {
+    if (nama == "" || kelas == "" || waktuAbsen == "") {
         alert("Isi semua data!");
         return;
     }
 
-    document.getElementById("status").innerHTML = "⏳ Mengambil lokasi...";
+    if (!navigator.geolocation) {
+        alert("HP tidak support GPS");
+        return;
+    }
 
-    navigator.geolocation.getCurrentPosition(function(position) {
+    document.getElementById("status").innerHTML = "Mengambil lokasi...";
 
-        var latitude = position.coords.latitude;
-        var longitude = position.coords.longitude;
+    navigator.geolocation.getCurrentPosition(function(pos) {
 
-        document.getElementById("status").innerHTML = "✅ Lokasi berhasil didapat";
+        var lat = pos.coords.latitude;
+        var lon = pos.coords.longitude;
 
-        var nomor = "6283136242382"; // GANTI NOMOR
-
+        var maps = "https://maps.google.com/?q=" + lat + "," + lon;
         var waktu = new Date().toLocaleString();
 
-        var maps = `https://maps.google.com/?q=${latitude},${longitude}`;
+        var pesan = "ABSEN GPS\n\n" +
+                    "Nama: " + nama + "\n" +
+                    "Kelas: " + kelas + "\n" +
+                    "Absen: " + waktuAbsen + "\n" +
+                    "Waktu: " + waktu + "\n" +
+                    "Lokasi: " + maps + "\n" +
+                    "Status: Hadir";
 
-        var pesan = `📌 ABSEN GPS
-
-Nama: ${nama}
-Kelas: ${kelas}
-Absen: ${waktuAbsen}
-Waktu: ${waktu}
-Lokasi: ${maps}
-Status: Hadir`;
+        var nomor = "6283136242383"; // GANTI NOMOR KAMU
 
         var url = "https://wa.me/" + nomor + "?text=" + encodeURIComponent(pesan);
 
-        window.open(url, "_blank");
+        window.location.href = url;
 
-    }, function() {
-        document.getElementById("status").innerHTML = "❌ Gagal ambil lokasi";
+    }, function(error) {
         alert("Aktifkan GPS dulu!");
     });
 }
