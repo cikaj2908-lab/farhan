@@ -2,7 +2,7 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <title>Absen Online</title>
+    <title>Absen GPS</title>
     <style>
         body {
             font-family: Arial;
@@ -32,9 +32,85 @@
             border-radius: 5px;
             cursor: pointer;
         }
-        img {
-            width: 100%;
-            margin-top: 10px;
+        .status {
+            font-size: 12px;
+            color: gray;
+        }
+    </style>
+</head>
+<body>
+
+<div class="box">
+    <h2>Absen GPS</h2>
+
+    <input type="text" id="nama" placeholder="Nama"><br>
+    <input type="text" id="kelas" placeholder="Kelas"><br>
+
+    <select id="waktuAbsen">
+        <option value="">Pilih Waktu Absen</option>
+        <option value="Pagi">Pagi</option>
+        <option value="Siang">Siang</option>
+        <option value="Malam">Malam</option>
+    </select><br>
+
+    <p class="status" id="status">📍 Mengambil lokasi...</p>
+
+    <button onclick="kirimWA()">Absen Sekarang</button>
+</div>
+
+<script>
+let latitude = "";
+let longitude = "";
+
+// Ambil GPS
+navigator.geolocation.getCurrentPosition(
+    function(position) {
+        latitude = position.coords.latitude;
+        longitude = position.coords.longitude;
+        document.getElementById("status").innerHTML = "✅ Lokasi berhasil didapat";
+    },
+    function(error) {
+        document.getElementById("status").innerHTML = "❌ Gagal ambil lokasi";
+    }
+);
+
+function kirimWA() {
+    var nama = document.getElementById("nama").value;
+    var kelas = document.getElementById("kelas").value;
+    var waktuAbsen = document.getElementById("waktuAbsen").value;
+
+    if(nama === "" || kelas === "" || waktuAbsen === "") {
+        alert("Isi semua data!");
+        return;
+    }
+
+    if(latitude === "" || longitude === "") {
+        alert("Lokasi belum didapat, tunggu sebentar!");
+        return;
+    }
+
+    var nomor = "6281234567890"; // GANTI NOMOR
+
+    var waktu = new Date().toLocaleString();
+
+    var maps = "https://www.google.com/maps?q=" + latitude + "," + longitude;
+
+    var pesan = "📌 ABSEN GPS%0A%0A" +
+                "Nama: " + nama + "%0A" +
+                "Kelas: " + kelas + "%0A" +
+                "Absen: " + waktuAbsen + "%0A" +
+                "Waktu: " + waktu + "%0A" +
+                "Lokasi: " + maps + "%0A" +
+                "Status: Hadir";
+
+    var url = "https://wa.me/" + nomor + "?text=" + pesan;
+
+    window.open(url, "_blank");
+}
+</script>
+
+</body>
+</html>            margin-top: 10px;
             border-radius: 10px;
         }
     </style>
