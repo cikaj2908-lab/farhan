@@ -59,126 +59,48 @@
 </div>
 
 <script>
-let latitude = "";
-let longitude = "";
+function kirimWA() {
+    var nama = document.getElementById("nama").value;
+    var kelas = document.getElementById("kelas").value;
+    var waktuAbsen = document.getElementById("waktuAbsen").value;
 
-// Ambil GPS
-navigator.geolocation.getCurrentPosition(
-    function(position) {
-        latitude = position.coords.latitude;
-        longitude = position.coords.longitude;
+    if(nama === "" || kelas === "" || waktuAbsen === "") {
+        alert("Isi semua data!");
+        return;
+    }
+
+    document.getElementById("status").innerHTML = "⏳ Mengambil lokasi...";
+
+    navigator.geolocation.getCurrentPosition(function(position) {
+
+        var latitude = position.coords.latitude;
+        var longitude = position.coords.longitude;
+
         document.getElementById("status").innerHTML = "✅ Lokasi berhasil didapat";
-    },
-    function(error) {
+
+        var nomor = "6283136242382"; // GANTI NOMOR
+
+        var waktu = new Date().toLocaleString();
+
+        var maps = `https://maps.google.com/?q=${latitude},${longitude}`;
+
+        var pesan = `📌 ABSEN GPS
+
+Nama: ${nama}
+Kelas: ${kelas}
+Absen: ${waktuAbsen}
+Waktu: ${waktu}
+Lokasi: ${maps}
+Status: Hadir`;
+
+        var url = "https://wa.me/" + nomor + "?text=" + encodeURIComponent(pesan);
+
+        window.open(url, "_blank");
+
+    }, function() {
         document.getElementById("status").innerHTML = "❌ Gagal ambil lokasi";
-    }
-);
-
-function kirimWA() {
-    var nama = document.getElementById("nama").value;
-    var kelas = document.getElementById("kelas").value;
-    var waktuAbsen = document.getElementById("waktuAbsen").value;
-
-    if(nama === "" || kelas === "" || waktuAbsen === "") {
-        alert("Isi semua data!");
-        return;
-    }
-
-    if(latitude === "" || longitude === "") {
-        alert("Lokasi belum didapat, tunggu sebentar!");
-        return;
-    }
-
-    var nomor = "6281234567890"; // GANTI NOMOR
-
-    var waktu = new Date().toLocaleString();
-
-    var maps = "https://www.google.com/maps?q=" + latitude + "," + longitude;
-
-    var pesan = "📌 ABSEN GPS%0A%0A" +
-                "Nama: " + nama + "%0A" +
-                "Kelas: " + kelas + "%0A" +
-                "Absen: " + waktuAbsen + "%0A" +
-                "Waktu: " + waktu + "%0A" +
-                "Lokasi: " + maps + "%0A" +
-                "Status: Hadir";
-
-    var url = "https://wa.me/" + nomor + "?text=" + pesan;
-
-    window.open(url, "_blank");
-}
-</script>
-
-</body>
-</html>            margin-top: 10px;
-            border-radius: 10px;
-        }
-    </style>
-</head>
-<body>
-
-<div class="box">
-    <h2>Form Absen</h2>
-
-    <input type="text" id="nama" placeholder="Nama"><br>
-    <input type="text" id="kelas" placeholder="Kelas"><br>
-
-    <select id="waktuAbsen">
-        <option value="">Pilih Waktu Absen</option>
-        <option value="Pagi">Pagi</option>
-        <option value="Siang">Siang</option>
-        <option value="Malam">Malam</option>
-    </select><br>
-
-    <input type="file" id="foto" accept="image/*" capture="environment"><br>
-
-    <img id="preview" src="" style="display:none;">
-
-    <button onclick="kirimWA()">Absen Sekarang</button>
-</div>
-
-<script>
-let fotoBase64 = "";
-
-document.getElementById("foto").addEventListener("change", function() {
-    const file = this.files[0];
-    const reader = new FileReader();
-
-    reader.onload = function() {
-        fotoBase64 = reader.result;
-        document.getElementById("preview").src = fotoBase64;
-        document.getElementById("preview").style.display = "block";
-    }
-
-    if(file){
-        reader.readAsDataURL(file);
-    }
-});
-
-function kirimWA() {
-    var nama = document.getElementById("nama").value;
-    var kelas = document.getElementById("kelas").value;
-    var waktuAbsen = document.getElementById("waktuAbsen").value;
-
-    if(nama === "" || kelas === "" || waktuAbsen === "") {
-        alert("Isi semua data!");
-        return;
-    }
-
-    var nomor = "6283136242383"; // GANTI NOMOR
-
-    var waktu = new Date().toLocaleString();
-
-    var pesan = "📌 ABSEN ONLINE%0A%0A" +
-                "Nama: " + nama + "%0A" +
-                "Kelas: " + kelas + "%0A" +
-                "Absen: " + waktuAbsen + "%0A" +
-                "Waktu: " + waktu + "%0A" +
-                "Status: Hadir";
-
-    var url = "https://wa.me/" + nomor + "?text=" + pesan;
-
-    window.open(url, "_blank");
+        alert("Aktifkan GPS dulu!");
+    });
 }
 </script>
 
