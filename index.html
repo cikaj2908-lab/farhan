@@ -1,117 +1,139 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-    <meta charset="UTF-8">
-    <title>Absen GPS</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ABSEN SAYANG💖</title>
 
-    <style>
-        body {
-            font-family: Arial;
-            text-align: center;
-            background: #f4f4f4;
-            padding-top: 50px;
-        }
-
-        .box {
-            background: white;
-            padding: 20px;
-            border-radius: 10px;
-            width: 300px;
-            margin: auto;
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
-        }
-
-        input, select {
-            width: 90%;
-            padding: 10px;
-            margin: 5px;
-        }
-
-        button {
-            width: 95%;
-            padding: 12px;
-            background: green;
-            color: white;
-            border: none;
-            border-radius: 5px;
-        }
-
-        button:active {
-            background: darkgreen;
-        }
-
-        #status {
-            font-size: 12px;
-            color: gray;
-        }
-    </style>
+<style>
+body {
+    font-family: Arial;
+    background: #ffd6e0;
+    padding: 15px;
+}
+.container {
+    max-width: 400px;
+    margin: auto;
+}
+h2 {
+    text-align: center;
+    color: #ff4d88;
+}
+.box {
+    background: #fff0f5;
+    padding: 12px;
+    margin-top: 10px;
+    border-radius: 12px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+select, input {
+    width: 100%;
+    padding: 10px;
+    margin-top: 5px;
+    border-radius: 8px;
+    border: 1px solid #ff99bb;
+}
+button {
+    width: 100%;
+    padding: 12px;
+    margin-top: 10px;
+    border: none;
+    border-radius: 12px;
+    background: #ff4d88;
+    color: white;
+    font-size: 16px;
+}
+button:hover {
+    background: #ff1a66;
+}
+#lokasi {
+    text-align: center;
+    color: #ff4d88;
+}
+</style>
 </head>
 
 <body>
 
+<div class="container">
+<h2>ABSEN SAYANG💖</h2>
+
 <div class="box">
-    <h2>Absen GPS</h2>
+NAMA:
+<input type="text" id="nama">
+</div>
 
-    <input type="text" id="nama" placeholder="Nama"><br>
-    <input type="text" id="kelas" placeholder="Kelas"><br>
+<div class="box">
+ABSEN:
+<select id="absen">
+<option>PAGI</option>
+<option>SIANG</option>
+<option>MALEM</option>
+</select>
+</div>
 
-    <select id="waktuAbsen">
-        <option value="">Pilih Waktu</option>
-        <option value="Pagi">Pagi</option>
-        <option value="Siang">Siang</option>
-        <option value="Malam">Malam</option>
-    </select><br>
+<div class="box">
+MAKAN:
+<select id="makan">
+<option>NASI</option>
+<option>MIE</option>
+<option>AYAM</option>
+<option>ROTI</option>
+<option>TIDAK MAKAN</option>
+</select>
+</div>
 
-    <p id="status">Klik tombol untuk absen</p>
+<div class="box">
+MANDI:
+<select id="MANDI">
+<option>SUDAH</option>
+<option>BELOM</option>
+</select>
+</div>
 
-    <button onclick="kirimWA()">Absen Sekarang</button>
+<div class="box">
+ALASAN KELUAR:
+<input type="text" id="alasan">
+</div>
+
+<button onclick="getLocation()">📍 AMBIL GPS</button>
+<p id="lokasi">BELOM AMBIL GPS</p>
+
+<button onclick="kirimWA()">💌 KIRIM</button>
+
 </div>
 
 <script>
-function kirimWA() {
+let latitude = "";
+let longitude = "";
 
-    var nama = document.getElementById("nama").value;
-    var kelas = document.getElementById("kelas").value;
-    var waktuAbsen = document.getElementById("waktuAbsen").value;
-
-    if (nama == "" || kelas == "" || waktuAbsen == "") {
-        alert("Isi semua data!");
-        return;
-    }
-
-    if (!navigator.geolocation) {
-        alert("HP tidak support GPS");
-        return;
-    }
-
-    document.getElementById("status").innerHTML = "Mengambil lokasi...";
-
+function getLocation() {
     navigator.geolocation.getCurrentPosition(function(pos) {
-
-        var lat = pos.coords.latitude;
-        var lon = pos.coords.longitude;
-
-        var maps = "https://maps.google.com/?q=" + lat + "," + lon;
-        var waktu = new Date().toLocaleString();
-
-        var pesan = "ABSEN GPS\n\n" +
-                    "Nama: " + nama + "\n" +
-                    "Kelas: " + kelas + "\n" +
-                    "Absen: " + waktuAbsen + "\n" +
-                    "Waktu: " + waktu + "\n" +
-                    "Lokasi: " + maps + "\n" +
-                    "Status: Hadir";
-
-        var nomor = "6283136242383"; // GANTI NOMOR KAMU
-
-        var url = "https://wa.me/" + nomor + "?text=" + encodeURIComponent(pesan);
-
-        window.location.href = url;
-
-    }, function(error) {
-        alert("Aktifkan GPS dulu!");
+        latitude = pos.coords.latitude;
+        longitude = pos.coords.longitude;
+        document.getElementById("lokasi").innerHTML =
+            "Lokasi: " + latitude + "," + longitude;
     });
+}
+
+function kirimWA() {
+    let nama = document.getElementById("nama").value;
+    let absen = document.getElementById("absen").value;
+    let makan = document.getElementById("makan").value;
+    let mandi = document.getElementById("mandi").value;
+    let alasan = document.getElementById("alasan").value;
+
+    let text =
+    "ABSEN PACAR 💖%0A" +
+    "Nama: " + nama + "%0A" +
+    "Absen: " + absen + "%0A" +
+    "Makan: " + makan + "%0A" +
+    "Mandi: " + mandi + "%0A" +
+    "Alasan: " + alasan + "%0A" +
+    "GPS: https://maps.google.com/?q=" + latitude + "," + longitude;
+
+    let nomor = "6283136242383"; // ganti nomor
+    window.open("https://wa.me/" + nomor + "?text=" + text, "_blank");
 }
 </script>
 
